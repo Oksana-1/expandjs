@@ -1,35 +1,56 @@
 import { slideUp, slideDown } from "./animation";
-const ExpandBody = {
-  targets: null,
+const ExpandTarget = {
   isOpened: true,
-  busy: false,
-  show(block) {
-    block.style.display = "block";
+  element: null,
+  show() {
+    this.element.style.display = "block";
     this.isOpened = true;
   },
-  hide(block) {
-    block.style.display = "none";
+  hide() {
+    this.element.style.display = "none";
     this.isOpened = false;
   },
-  open(block) {
-    this.busy = true;
-    slideDown(block).then(() => {
-      this.busy = false;
-      this.isOpened = true;
+  open() {
+    return new Promise((resolve) => {
+      slideDown(this.element).then(() => {
+        this.isOpened = true;
+        resolve();
+      });
     });
   },
-  close(block) {
-    this.busy = true;
-    slideUp(block).then(() => {
-      this.busy = false;
-      this.isOpened = false;
+  close() {
+    return new Promise((resolve) => {
+      slideUp(this.element).then(() => {
+        this.isOpened = false;
+        resolve();
+      });
     });
   },
+  setTarget(target) {
+    this.element = target;
+  },
+  setDefaultState() {
+    const defaultState =
+      this.element.getAttribute("data-default-state") || null;
+    if (!defaultState) return;
+    if (defaultState === "opened") {
+      this.show();
+    } else if (defaultState === "closed") {
+      this.hide();
+    }
+  },
+};
+const ExpandBody = {
+  targets: null,
+  busy: false,
   openCloseHandler() {
     if (this.busy) return;
     if (!this.targets) return;
+    this.busy = true;
     this.targets.forEach((target) => {
-      this.isOpened ? this.close(target) : this.open(target);
+      target.isOpened
+        ? target.close().then(() => (this.busy = false))
+        : target.open().then(() => (this.busy = false));
     });
   },
   setTargets(element) {
@@ -37,24 +58,16 @@ const ExpandBody = {
     if (!areaName) return;
     const targets =
       document.querySelectorAll(`[data-expand-id="${areaName}"]`) || null;
-    if (!targets) return;
-    this.targets = targets;
-  },
-  setDefaultState() {
-    this.targets.forEach((target) => {
-      const defaultState = target.getAttribute("data-default-state") || null;
-      if (!defaultState) return;
-      if (defaultState === "opened") {
-        this.show(target);
-      } else if (defaultState === "closed") {
-        this.hide(target);
-      }
+    this.targets = Array.from(targets).map((target) => {
+      const expandTarget = Object.create(ExpandTarget);
+      expandTarget.setTarget(target);
+      expandTarget.setDefaultState();
+      return expandTarget;
     });
   },
   init(element) {
     if (!element) return;
     this.setTargets(element);
-    this.setDefaultState();
   },
 };
 export const ExpandHandler = {
