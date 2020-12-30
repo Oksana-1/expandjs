@@ -1,5 +1,6 @@
 const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
@@ -7,6 +8,15 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
+  },
+  mode: "development",
+  devServer: {
+    historyApiFallback: true,
+    contentBase: path.resolve(__dirname, "./dist"),
+    open: true,
+    compress: true,
+    hot: true,
+    port: 8080,
   },
   module: {
     rules: [
@@ -22,27 +32,21 @@ module.exports = {
       },
       {
         test: /\.(sa|sc|c)ss$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
-          {
-            loader: "css-loader",
-          },
-          {
-            loader: "postcss-loader",
-          },
-          {
-            loader: "sass-loader",
-          },
-        ],
+        use: ["style-loader", "css-loader", "postcss-loader", "sass-loader"],
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        type: "asset/resource",
       },
     ],
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: "bundle.css",
-    }),
     new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: "My sweet expand-js helper",
+      template: path.resolve(__dirname, "index.html"),
+      filename: "index.html",
+    }),
+    new webpack.HotModuleReplacementPlugin(),
   ],
 };

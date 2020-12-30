@@ -1,5 +1,21 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+button,
+button:hover,
+button:active,
+button:focus {
+  border: none;
+  appearance: none;
+  outline: none;
+}
 body {
-  background-color: #ddd;
+  background-color: #ddcbf5;
+}
+.main {
+  min-height: 100vh;
 }
 .centered {
   text-align: center;
@@ -25,7 +41,7 @@ body {
   cursor: pointer;
   position: relative;
   &::before {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     width: 5px;
@@ -42,5 +58,52 @@ body {
       transform: rotate(135deg);
       top: calc(50% - 3px);
     }
+  }
+}
+.full-height {
+  height: 100vh;
+  position: relative;
+  .big-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+}
+.top-image {
+  position: absolute;
+  top: auto;
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  right: 0;
+  background-image: url("../img/pexels-sharon-mccutcheon-3784440.jpg");
+  background-size: cover;
+}
+.bottom-image {
+  position: absolute;
+  top: auto;
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  right: 0;
+  background-image: url("../img/pexels-sharon-mccutcheon-3713892.jpg");
+  background-size: cover;
+}
+.big-btn {
+  width: 200px;
+  height: 50px;
+  line-height: 50px;
+}
+.rainbow-btn {
+  background-color: rgba(251, 7, 217, 1);
+  border: none;
+  border-radius: 25px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 1s ease;
+  &:hover {
+    background-color: rgba(28, 127, 238, 1);
   }
 }
