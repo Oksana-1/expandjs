@@ -4,6 +4,9 @@ body {
 .centered {
   text-align: center;
 }
+.mb-10 {
+  margin-bottom: 10px;
+}
 .mb-20 {
   margin-bottom: 20px;
 }
@@ -16,4 +19,28 @@ body {
   border-radius: 5px;
   padding: 20px;
   display: inline-block;
+}
+.expand-button {
+  padding-right: 30px;
+  cursor: pointer;
+  position: relative;
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-bottom: 2px solid #363636;
+    border-left: 2px solid #363636;
+    right: 3px;
+    top: calc(50% - 5px);
+    transform: rotate(-45deg);
+    transition: transform 0.2s ease;
+  }
+  &.active {
+    &::before {
+      transform: rotate(135deg);
+      top: calc(50% - 3px);
+    }
+  }
 }

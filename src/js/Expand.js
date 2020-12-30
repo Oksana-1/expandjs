@@ -29,16 +29,6 @@ const ExpandTarget = {
   setTarget(target) {
     this.element = target;
   },
-  setDefaultState() {
-    const defaultState =
-      this.element.getAttribute("data-default-state") || null;
-    if (!defaultState) return;
-    if (defaultState === "opened") {
-      this.show();
-    } else if (defaultState === "closed") {
-      this.hide();
-    }
-  },
 };
 const ExpandBody = {
   trigger: null,
@@ -62,6 +52,21 @@ const ExpandBody = {
       }
     });
   },
+  setDefaultState() {
+    if (!this.targets) return;
+    this.targets.forEach((target) => {
+      const defaultState =
+        target.element.getAttribute("data-default-state") || null;
+      if (!defaultState) return;
+      if (defaultState === "opened") {
+        this.trigger.classList.add("active");
+        target.show();
+      } else if (defaultState === "closed") {
+        this.trigger.classList.remove("active");
+        target.hide();
+      }
+    });
+  },
   setTargets(element) {
     const areaName = element.getAttribute("data-expand") || null;
     if (!areaName) return;
@@ -70,7 +75,6 @@ const ExpandBody = {
     this.targets = Array.from(targets).map((target) => {
       const expandTarget = Object.create(ExpandTarget);
       expandTarget.setTarget(target);
-      expandTarget.setDefaultState();
       return expandTarget;
     });
   },
@@ -78,6 +82,7 @@ const ExpandBody = {
     if (!element) return;
     this.trigger = element;
     this.setTargets(element);
+    this.setDefaultState();
   },
 };
 export const ExpandHandler = {
