@@ -41,6 +41,7 @@ const ExpandTarget = {
   },
 };
 const ExpandBody = {
+  trigger: null,
   targets: null,
   busy: false,
   openCloseHandler() {
@@ -48,9 +49,17 @@ const ExpandBody = {
     if (!this.targets) return;
     this.busy = true;
     this.targets.forEach((target) => {
-      target.isOpened
-        ? target.close().then(() => (this.busy = false))
-        : target.open().then(() => (this.busy = false));
+      if (target.isOpened) {
+        this.trigger.classList.remove("active");
+        target.close().then(() => {
+          this.busy = false;
+        });
+      } else {
+        this.trigger.classList.add("active");
+        target.open().then(() => {
+          this.busy = false;
+        });
+      }
     });
   },
   setTargets(element) {
@@ -67,6 +76,7 @@ const ExpandBody = {
   },
   init(element) {
     if (!element) return;
+    this.trigger = element;
     this.setTargets(element);
   },
 };
