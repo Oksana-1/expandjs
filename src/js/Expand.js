@@ -1,4 +1,5 @@
 import { slideUp, slideDown } from "./animation";
+
 const ExpandTarget = {
   isOpened: true,
   element: null,
@@ -29,6 +30,20 @@ const ExpandTarget = {
   setTarget(target) {
     this.element = target;
   },
+  getSiblings() {
+    if (!this.element) return null;
+    const group = this.element.getAttribute("data-expand-group") || null;
+    if (!group) return null;
+    const groupElements = document.querySelectorAll(
+      `[data-expand-group="${group}"]`
+    );
+    return group
+      ? Array.prototype.filter.call(
+          groupElements,
+          (groupElement) => groupElement !== this.element
+        )
+      : null;
+  },
 };
 const ExpandBody = {
   trigger: null,
@@ -39,6 +54,7 @@ const ExpandBody = {
     if (!this.targets) return;
     this.busy = true;
     this.targets.forEach((target) => {
+      const siblings = target.getSiblings();
       if (target.isOpened) {
         this.trigger.classList.remove("active");
         target.close().then(() => {
@@ -49,6 +65,15 @@ const ExpandBody = {
         target.open().then(() => {
           this.busy = false;
         });
+        if (siblings) {
+          siblings.forEach((sibling) => {
+            const siblingTarget = Object.create(ExpandTarget);
+            siblingTarget.setTarget(sibling);
+            siblingTarget.close().then(() => {
+              this.busy = false;
+            });
+          });
+        }
       }
     });
   },
