@@ -12,7 +12,9 @@ button:focus {
   outline: none;
 }
 body {
-  background-color: #ddcbf5;
+  background-color: #fff;
+  color: #383838;
+  font-family: sans-serif;
 }
 .main {
   min-height: 100vh;
@@ -26,84 +28,53 @@ body {
 .mb-20 {
   margin-bottom: 20px;
 }
+.mb-30 {
+  margin-bottom: 30px;
+}
 .container {
   max-width: 1200px;
   margin: 0 auto;
 }
 .example-code {
-  background-color: #eee;
+  background-color: #2d2a2e;
+  border: 1px solid #403e41;
+  color: #fcfcfc;
   border-radius: 5px;
   padding: 20px;
-  display: inline-block;
+  max-width: 700px;
+  margin-right: auto;
+  margin-left: auto;
 }
-.expand-button {
-  padding-right: 30px;
+.example-item {
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+button {
+  margin-bottom: 10px;
+  display: block;
+  width: 100%;
+  padding: 5px 10px;
   cursor: pointer;
-  position: relative;
-  &::before {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    border-bottom: 2px solid #363636;
-    border-left: 2px solid #363636;
-    right: 3px;
-    top: calc(50% - 5px);
-    transform: rotate(-45deg);
-    transition: transform 0.2s ease;
-  }
-  &.active {
-    &::before {
-      transform: rotate(135deg);
-      top: calc(50% - 3px);
-    }
-  }
 }
-.full-height {
-  height: 100vh;
-  position: relative;
-  .big-btn {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-  }
+button,
+button:hover,
+button:focus,
+button:active {
+  border: 1px solid #363636;
+  box-shadow: none;
+  border-radius: 3px;
+  outline: none;
 }
-.top-image {
-  position: absolute;
-  top: auto;
-  bottom: 0;
-  height: 100%;
-  left: 0;
-  right: 0;
-  background-image: url("../img/pexels-sharon-mccutcheon-3784440.jpg");
-  background-size: cover;
+button.active {
+  background-color: #fff;
 }
-.bottom-image {
-  position: absolute;
-  top: auto;
-  bottom: 0;
-  height: 100%;
-  left: 0;
-  right: 0;
-  background-image: url("../img/pexels-sharon-mccutcheon-3713892.jpg");
-  background-size: cover;
+button.active {
+  background-color: #fff;
 }
-.big-btn {
-  width: 200px;
-  height: 50px;
-  line-height: 50px;
+[data-default-state="closed"] {
+  display: none;
 }
-.rainbow-btn {
-  background-color: rgba(251, 7, 217, 1);
-  border: none;
-  border-radius: 25px;
-  color: #fff;
-  cursor: pointer;
-  transition: all 1s ease;
-  &:hover {
-    background-color: rgba(28, 127, 238, 1);
-  }
+.top-section {
+  padding: 60px  30px 0;
 }

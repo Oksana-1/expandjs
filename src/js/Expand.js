@@ -87,7 +87,7 @@ const ExpandBody = {
 };
 export const ExpandHandler = {
   getTriggers() {
-    return document.querySelectorAll(".js-expand") || null;
+    return document.querySelectorAll("[data-expand]") || null;
   },
   listen(event) {
     const triggers = this.getTriggers();
