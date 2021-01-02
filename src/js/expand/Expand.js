@@ -11,7 +11,8 @@ const Expand = {
     this.busy = true;
     this.targets.forEach((target) => {
       const siblings = target.getSiblings();
-      if (target.isOpened) {
+      const isOpened = target.checkIsOpened();
+      if (isOpened) {
         this.trigger.makeInactive();
         target.close().then(() => {
           this.busy = false;

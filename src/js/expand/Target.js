@@ -3,20 +3,19 @@ import { exist } from "../utils/helpers";
 import Trigger from "./Trigger";
 
 const Target = {
-  isOpened: true,
   element: null,
   show() {
     this.element.style.display = "block";
-    this.isOpened = true;
+    this.element.setAttribute("data-state", "opened");
   },
   hide() {
     this.element.style.display = "none";
-    this.isOpened = false;
+    this.element.setAttribute("data-state", "closed");
   },
   open() {
     return new Promise((resolve) => {
       slideDown(this.element).then(() => {
-        this.isOpened = true;
+        this.element.setAttribute("data-state", "opened");
         resolve();
       });
     });
@@ -24,7 +23,7 @@ const Target = {
   close() {
     return new Promise((resolve) => {
       slideUp(this.element).then(() => {
-        this.isOpened = false;
+        this.element.setAttribute("data-state", "closed");
         resolve();
       });
     });
@@ -57,6 +56,12 @@ const Target = {
       expandTrigger.setTriggerElement(trigger);
       return expandTrigger;
     });
+  },
+  checkIsOpened() {
+    if (!this.element) return true;
+    const isOpenedAttr = this.element.getAttribute("data-state");
+    if (!isOpenedAttr) return true;
+    return isOpenedAttr === "opened";
   },
 };
 export default Target;
