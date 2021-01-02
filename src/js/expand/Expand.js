@@ -9,32 +9,36 @@ const Expand = {
     if (this.busy) return;
     if (!this.targets) return;
     this.busy = true;
+    const openTargetsPromises = [];
+    const closeSiblingsPromises = [];
     this.targets.forEach((target) => {
       const siblings = target.getSiblings();
       const isOpened = target.checkIsOpened();
       if (isOpened) {
         this.trigger.makeInactive();
-        target.close().then(() => {
-          this.busy = false;
-        });
+        openTargetsPromises.push(target.close());
       } else {
         this.trigger.makeActive();
-        target.open().then(() => {
-          this.busy = false;
-        });
+        openTargetsPromises.push(target.open());
         if (siblings) {
           siblings.forEach((sibling) => {
+            this.busy = true;
             const siblingTarget = Object.create(Target);
             siblingTarget.setTargetElement(sibling);
             const siblingsTriggers = siblingTarget.getTriggers();
             siblingsTriggers.forEach((siblingsTrigger) => {
               siblingsTrigger.makeInactive();
             });
-            siblingTarget.close();
+            closeSiblingsPromises.push(siblingTarget.close());
           });
         }
       }
     });
+    Promise.allSettled([...openTargetsPromises, ...closeSiblingsPromises]).then(
+      () => {
+        this.busy = false;
+      }
+    );
   },
   setDefaultState() {
     if (!this.targets) return;
