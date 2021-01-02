@@ -55,21 +55,13 @@ const Expand = {
     expandTrigger.setTriggerElement(trigger);
     this.trigger = expandTrigger;
   },
-  setTargets(element) {
-    const areaName = element.getAttribute("data-expand") || null;
-    if (!areaName) return;
-    const targets =
-      document.querySelectorAll(`[data-expand-id="${areaName}"]`) || null;
-    this.targets = Array.from(targets).map((target) => {
-      const expandTarget = Object.create(Target);
-      expandTarget.setTargetElement(target);
-      return expandTarget;
-    });
+  setTargets() {
+    this.targets = this.trigger.getTargets();
   },
   init(element) {
     if (!element) return;
     this.setTrigger(element);
-    this.setTargets(element);
+    this.setTargets();
     this.setDefaultState();
   },
 };
