@@ -10,9 +10,15 @@ const Expand = {
     this.targets.forEach((target) => {
       const siblings = target.getSiblings();
       const isOpened = target.checkIsOpened();
+      const triggerSiblings = this.trigger.getSiblings();
       if (isOpened) {
         this.trigger.makeInactive();
         openCloseTargetsPromises.push(target.close());
+        if (triggerSiblings) {
+          triggerSiblings.forEach((triggerSibling) =>
+            triggerSibling.makeInactive()
+          );
+        }
       } else {
         this.trigger.makeActive();
         openCloseTargetsPromises.push(target.open());
@@ -24,6 +30,11 @@ const Expand = {
             });
             closeSiblingsPromises.push(sibling.close());
           });
+        }
+        if (triggerSiblings) {
+          triggerSiblings.forEach((triggerSibling) =>
+            triggerSibling.makeInactive()
+          );
         }
       }
     });
@@ -42,9 +53,11 @@ const Expand = {
     this.targets.forEach((target) => {
       this.trigger.makeActive();
       const triggerSiblings = this.trigger.getSiblings();
-      triggerSiblings.forEach((triggerSibling) =>
-        triggerSibling.makeInactive()
-      );
+      if (triggerSiblings) {
+        triggerSiblings.forEach((triggerSibling) =>
+          triggerSibling.makeInactive()
+        );
+      }
       const isOpened = target.checkIsOpened();
       if (!isOpened) {
         openTargetsPromises.push(target.open());
