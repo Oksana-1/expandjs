@@ -1,4 +1,3 @@
-import Target from "./Target";
 import Trigger from "./Trigger";
 
 const Expand = {
@@ -23,13 +22,11 @@ const Expand = {
         if (siblings) {
           siblings.forEach((sibling) => {
             this.busy = true;
-            const siblingTarget = Object.create(Target);
-            siblingTarget.setTargetElement(sibling);
-            const siblingsTriggers = siblingTarget.getTriggers();
+            const siblingsTriggers = sibling.getTriggers();
             siblingsTriggers.forEach((siblingsTrigger) => {
               siblingsTrigger.makeInactive();
             });
-            closeSiblingsPromises.push(siblingTarget.close());
+            closeSiblingsPromises.push(sibling.close());
           });
         }
       }

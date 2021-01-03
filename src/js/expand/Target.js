@@ -38,12 +38,16 @@ const Target = {
     const groupElements = document.querySelectorAll(
       `[data-expand-group="${group}"]`
     );
-    return group
-      ? Array.prototype.filter.call(
-          groupElements,
-          (groupElement) => groupElement !== this.element
-        )
-      : null;
+    if (!exist(groupElements)) return null;
+    const siblingsElements = Array.prototype.filter.call(
+      groupElements,
+      (groupElement) => groupElement !== this.element
+    );
+    return siblingsElements.map((siblingElement) => {
+      const expandTarget = Object.create(Target);
+      expandTarget.setTargetElement(siblingElement);
+      return expandTarget;
+    });
   },
   getTriggers() {
     if (!this.element) return null;
