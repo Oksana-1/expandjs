@@ -37,6 +37,34 @@ const Expand = {
       });
     });
   },
+  openHandler() {
+    if (!this.targets) return;
+    const openTargetsPromises = [];
+    this.targets.forEach((target) => {
+      const isOpened = target.checkIsOpened();
+      if (!isOpened) {
+        this.trigger.makeActive();
+        openTargetsPromises.push(target.open());
+      }
+    });
+    return new Promise((resolve) => {
+      Promise.allSettled([...openTargetsPromises]).then(() => {
+        resolve();
+      });
+    });
+  },
+  expandHandleFactory() {
+    const isToggle = this.trigger.element.getAttribute("data-toggle");
+    if (isToggle === "false") {
+      return new Promise((resolve) => {
+        this.openHandler().then(() => resolve());
+      });
+    } else {
+      return new Promise((resolve) => {
+        this.openCloseHandler().then(() => resolve());
+      });
+    }
+  },
   setDefaultState() {
     if (!this.targets) return;
     this.targets.forEach((target) => {
@@ -79,7 +107,7 @@ export const ExpandHandler = {
         e.preventDefault();
         if (this.busy) return;
         this.busy = true;
-        expand.openCloseHandler().then(() => (this.busy = false));
+        expand.expandHandleFactory().then(() => (this.busy = false));
       });
     });
   },
