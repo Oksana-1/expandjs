@@ -25,5 +25,23 @@ const Trigger = {
       return expandTarget;
     });
   },
+  getSiblings() {
+    if (!this.element) return null;
+    const areaName = this.element.getAttribute("data-expand") || null;
+    if (!areaName) return;
+    const triggerElements = document.querySelectorAll(
+      `[data-expand="${areaName}"]`
+    );
+    if (!exist(triggerElements)) return null;
+    const siblingsElements = Array.prototype.filter.call(
+      triggerElements,
+      (triggerElement) => triggerElement !== this.element
+    );
+    return siblingsElements.map((siblingElement) => {
+      const expandTrigger = Object.create(Trigger);
+      expandTrigger.setTriggerElement(siblingElement);
+      return expandTrigger;
+    });
+  },
 };
 export default Trigger;

@@ -18,7 +18,6 @@ const Expand = {
         openCloseTargetsPromises.push(target.open());
         if (siblings) {
           siblings.forEach((sibling) => {
-            this.busy = true;
             const siblingsTriggers = sibling.getTriggers();
             siblingsTriggers.forEach((siblingsTrigger) => {
               siblingsTrigger.makeInactive();
@@ -41,9 +40,13 @@ const Expand = {
     if (!this.targets) return;
     const openTargetsPromises = [];
     this.targets.forEach((target) => {
+      this.trigger.makeActive();
+      const triggerSiblings = this.trigger.getSiblings();
+      triggerSiblings.forEach((triggerSibling) =>
+        triggerSibling.makeInactive()
+      );
       const isOpened = target.checkIsOpened();
       if (!isOpened) {
-        this.trigger.makeActive();
         openTargetsPromises.push(target.open());
       }
     });

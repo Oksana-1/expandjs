@@ -42,6 +42,13 @@ body {
   display: flex;
   flex-wrap: nowrap;
 }
+.flex-row {
+  display: flex;
+  flex-wrap: nowrap;
+  button {
+    margin: 0 20px;
+  }
+}
 .example-code {
   background-color: #2d2a2e;
   border: 1px solid #403e41;
