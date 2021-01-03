@@ -3,22 +3,19 @@ import Trigger from "./Trigger";
 const Expand = {
   trigger: null,
   targets: null,
-  busy: false,
   openCloseHandler() {
-    if (this.busy) return;
     if (!this.targets) return;
-    this.busy = true;
-    const openTargetsPromises = [];
+    const openCloseTargetsPromises = [];
     const closeSiblingsPromises = [];
     this.targets.forEach((target) => {
       const siblings = target.getSiblings();
       const isOpened = target.checkIsOpened();
       if (isOpened) {
         this.trigger.makeInactive();
-        openTargetsPromises.push(target.close());
+        openCloseTargetsPromises.push(target.close());
       } else {
         this.trigger.makeActive();
-        openTargetsPromises.push(target.open());
+        openCloseTargetsPromises.push(target.open());
         if (siblings) {
           siblings.forEach((sibling) => {
             this.busy = true;
@@ -31,11 +28,14 @@ const Expand = {
         }
       }
     });
-    Promise.allSettled([...openTargetsPromises, ...closeSiblingsPromises]).then(
-      () => {
-        this.busy = false;
-      }
-    );
+    return new Promise((resolve) => {
+      Promise.allSettled([
+        ...openCloseTargetsPromises,
+        ...closeSiblingsPromises,
+      ]).then(() => {
+        resolve();
+      });
+    });
   },
   setDefaultState() {
     if (!this.targets) return;
@@ -68,6 +68,7 @@ const Expand = {
   },
 };
 export const ExpandHandler = {
+  busy: false,
   listen(event) {
     const triggers = document.querySelectorAll("[data-expand]") || null;
     if (!triggers) return;
@@ -76,7 +77,9 @@ export const ExpandHandler = {
       expand.init(trigger);
       trigger.addEventListener(event, (e) => {
         e.preventDefault();
-        expand.openCloseHandler();
+        if (this.busy) return;
+        this.busy = true;
+        expand.openCloseHandler().then(() => (this.busy = false));
       });
     });
   },
